@@ -40,26 +40,35 @@ let dragging = false;
 let dragX = 0;
 let dragY = 0;
 
-box.addEventListener('mousedown', (e) => {
+const startMove = (e) => {
     if (e.target === box) {
         dragging = true
         dragX = e.clientX - box.offsetLeft
         dragY = e.clientY - box.offsetTop
     }
-})
+}
 
-box.addEventListener('mouseup', (e) => {
+box.addEventListener('mousedown', startMove)
+box.addEventListener('pointerdown', startMove)
+
+const endMove = (e) => {
     if (e.target === box) {
         dragging = false
     }
-})
+}
 
-box.addEventListener('mousemove', (e) => {
+box.addEventListener('mouseup', endMove)
+box.addEventListener('pointerup', endMove)
+
+const makeMove = (e) => {
     if (dragging && e.target === box) {
         box.style.top = (e.clientY - dragY) / window.innerHeight * 100 + '%'
         box.style.left = (e.clientX - dragX) / window.innerWidth * 100 + '%'
     }
-})
+}
+
+box.addEventListener('mousemove', makeMove)
+box.addEventListener('pointermove', makeMove)
 
 let rows = getRows();
 let row = currentRow(rows, wordSent);
