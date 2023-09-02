@@ -1,0 +1,30 @@
+{
+    "manifest_version": 3,
+    "name": "Wordle Bot [by srnm]",
+    "description": "Best Wordle Bot to use on every Wordle website!",
+    "version": "1.0",
+    "action": {
+        "default_popup": "popup/popup.html",
+        "default_icon": "wordlebot.png"
+    },
+    "content_scripts": [
+        {
+            "js": ["scripts/bot.js", "scripts/cowordle.js", "scripts/main.js"],
+            "matches": [
+                "https://cowordle.org/*"
+            ]
+        },
+        {
+            "js": ["scripts/bot.js", "scripts/unlimited.js", "scripts/main.js"],
+            "matches": [
+                "https://wordleunlimited.org/*"
+            ]
+        },
+        {
+            "js": ["scripts/bot.js", "scripts/wordle.js", "scripts/main.js"],
+            "matches": [
+                "https://www.nytimes.com/games/wordle/*"
+            ]
+        }
+    ]
+}
