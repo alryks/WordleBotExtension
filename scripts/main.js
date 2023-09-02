@@ -33,7 +33,7 @@ const currentRow = (rows, wordSent) => {
 
 // create a box div with h3-s insidr of it with dark grey background rounded corners and shadow behind it
 let box = document.createElement('div')
-box.style.cssText = `background-color: #4B4B4B; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, .5); color: white; padding: 10px; position: absolute; width: 200px; height: fit-content;`
+box.style.cssText = `background-color: #4B4B4B; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, .5); color: white; z-index: 1000; padding: 10px; position: absolute; width: 200px; height: fit-content;`
 document.body.insertAdjacentElement('afterbegin', box)
 
 let dragging = false;
