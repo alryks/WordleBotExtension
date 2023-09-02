@@ -33,7 +33,7 @@ const currentRow = (rows, wordSent) => {
 
 // create a box div with h3-s insidr of it with dark grey background rounded corners and shadow behind it
 let box = document.createElement('div')
-box.style.cssText = `background-color: #4B4B4B; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, .5); color: white; z-index: 1000; padding: 10px; position: absolute; width: 200px; height: fit-content;`
+box.style.cssText = `background-color: #4B4B4B; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, .5); color: white; z-index: 1000; padding: 10px; position: absolute; width: 200px; height: fit-content; top: 70%; left: calc(50% - 100px);`
 document.body.insertAdjacentElement('afterbegin', box)
 
 let dragging = false;
@@ -49,29 +49,31 @@ const startMove = (e) => {
     }
 }
 
-box.addEventListener('mousedown', startMove)
-box.addEventListener('pointerdown', startMove)
+document.addEventListener('mousedown', startMove)
+document.addEventListener('pointerdown', startMove)
 
 const endMove = (e) => {
     if (e.target === box) {
         e.preventDefault()
-        dragging = false
     }
+    dragging = false
 }
 
-box.addEventListener('mouseup', endMove)
-box.addEventListener('pointerup', endMove)
+document.addEventListener('mouseup', endMove)
+document.addEventListener('pointerup', endMove)
 
 const makeMove = (e) => {
     if (dragging && e.target === box) {
         e.preventDefault()
+    }
+    if (dragging) {
         box.style.top = (e.clientY - dragY) / window.innerHeight * 100 + '%'
         box.style.left = (e.clientX - dragX) / window.innerWidth * 100 + '%'
     }
 }
 
-box.addEventListener('mousemove', makeMove)
-box.addEventListener('pointermove', makeMove)
+document.addEventListener('mousemove', makeMove)
+document.addEventListener('pointermove', makeMove)
 
 let rows = getRows();
 let row = currentRow(rows, wordSent);
@@ -90,9 +92,12 @@ window.setInterval(() => {
 
         bestWords = bestWords.slice(0, Math.min(bestWords.length, 10))
         for (let i = 0; i < bestWords.length; i++) {
-            let h3 = document.createElement('h3')
-            h3.innerHTML = (i + 1).toString() + '. ' + bestWords[i]
-            box.appendChild(h3)
+            let span = document.createElement('span')
+            span.innerHTML = (i + 1).toString() + '. ' + bestWords[i]
+            box.appendChild(span)
+            if (i + 1 != bestWords.length) {
+                box.appendChild(document.createElement('br'))
+            }
         }
         row = currentRow(rows, wordSent);
     }

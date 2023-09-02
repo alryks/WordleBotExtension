@@ -1,4 +1,4 @@
-let words = `aback
+let wordss = `aback
 abase
 abate
 abbey
@@ -2314,7 +2314,7 @@ zebra
 zesty
 zonal`
 
-let wordss = `aahed
+let words = `aahed
 aalii
 aapas
 aargh
