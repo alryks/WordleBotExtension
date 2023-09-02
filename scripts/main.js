@@ -42,6 +42,7 @@ let dragY = 0;
 
 const startMove = (e) => {
     if (e.target === box) {
+        e.preventDefault()
         dragging = true
         dragX = e.clientX - box.offsetLeft
         dragY = e.clientY - box.offsetTop
@@ -53,6 +54,7 @@ box.addEventListener('pointerdown', startMove)
 
 const endMove = (e) => {
     if (e.target === box) {
+        e.preventDefault()
         dragging = false
     }
 }
@@ -62,6 +64,7 @@ box.addEventListener('pointerup', endMove)
 
 const makeMove = (e) => {
     if (dragging && e.target === box) {
+        e.preventDefault()
         box.style.top = (e.clientY - dragY) / window.innerHeight * 100 + '%'
         box.style.left = (e.clientX - dragX) / window.innerWidth * 100 + '%'
     }
