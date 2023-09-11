@@ -19,7 +19,7 @@ const getWord = (row) => {
 }
 
 const wordSent = (row) => {
-    return Array.from(row.querySelectorAll('div[aria-roledescription=tile]')).map((div) => div.getAttribute("data-state") != "empty").reduce((a, b) => a + b, 0) === row.querySelectorAll('div[aria-roledescription=tile]').length
+    return Array.from(row.querySelectorAll('div[aria-roledescription=tile]')).map((div) => div.getAttribute("data-state") != "empty" && div.getAttribute("data-state") != "tbh").reduce((a, b) => a + b, 0) === row.querySelectorAll('div[aria-roledescription=tile]').length
 }
 
 const isEnd = () => {

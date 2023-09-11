@@ -20,8 +20,10 @@ const createGuess = (word, colors) => {
 
 const currentRow = (rows, wordSent) => {
     rowNum = 0
+    guesses = []
     for (let row of rows) {
         if (wordSent(row)) {
+            guesses.push(createGuess(...getWord(row)))
             rowNum++
         }
         else {
@@ -75,30 +77,20 @@ const makeMove = (e) => {
 document.addEventListener('mousemove', makeMove)
 document.addEventListener('pointermove', makeMove)
 
+let guesses = []
+let prevGuessesLength = 0
+let bestWords = []
+
 let rows = getRows();
 let row = currentRow(rows, wordSent);
-
-let guesses = []
 
 let end = isEnd();
 
 window.setInterval(() => {
-    console.log(row);
-    if (row < rows.length && wordSent(rows[row]) && !end) {
-        guesses.push(createGuess(...getWord(rows[row])));
-        let bestWords = countWordsScores(guesses, words)
-
-        box.innerHTML = ''
-
-        bestWords = bestWords.slice(0, Math.min(bestWords.length, 10))
-        for (let i = 0; i < bestWords.length; i++) {
-            let span = document.createElement('span')
-            span.innerHTML = (i + 1).toString() + '. ' + bestWords[i]
-            box.appendChild(span)
-            if (i + 1 != bestWords.length) {
-                box.appendChild(document.createElement('br'))
-            }
-        }
+    if (row < rows.length && (wordSent(rows[row]) || prevGuessesLength < guesses.length) && !end) {
+        if (!(prevGuessesLength < guesses.length)) guesses.push(createGuess(...getWord(rows[row])));
+        prevGuessesLength = guesses.length
+        countWordsScores(guesses, words, bestWords)
         row = currentRow(rows, wordSent);
     }
     if (isEnd()) {
@@ -109,5 +101,18 @@ window.setInterval(() => {
         rows = getRows();
         row = currentRow(rows, wordSent);
         end = false
+    }
+
+    box.innerHTML = ''
+
+    console.log(bestWords);
+    bestWords = bestWords.slice(0, Math.min(bestWords.length, 10))
+    for (let i = 0; i < bestWords.length; i++) {
+        let span = document.createElement('span')
+        span.innerHTML = (i + 1).toString() + '. ' + bestWords[i][0]
+        box.appendChild(span)
+        if (i + 1 != bestWords.length) {
+            box.appendChild(document.createElement('br'))
+        }
     }
 }, 200)

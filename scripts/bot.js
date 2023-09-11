@@ -1,4 +1,4 @@
-let wordss = `aback
+let words = `aback
 abase
 abate
 abbey
@@ -2314,7 +2314,7 @@ zebra
 zesty
 zonal`
 
-let words = `aahed
+let wordss = `aahed
 aalii
 aapas
 aargh
@@ -17240,53 +17240,48 @@ const possibleWordsFromGuesses = (guesses, wordList) => {
     return possibleWords
 }
 
-const countWordsScores = (guesses, wordList) => {
-    let wordsScores = [];
-    let possibleWords = possibleWordsFromGuesses(guesses, wordList);
-    if (possibleWords.length > 100) {
-        let possibleWordsCopy = JSON.parse(JSON.stringify(possibleWords));
-        possibleWordsCopy.sort((word1, word2) => {
-            uniqueLetters1 = new Set(word1);
-            uniqueLetters2 = new Set(word2);
-            return uniqueLetters2.size - uniqueLetters1.size
-        })
-        possibleWordsCopy.sort(() => Math.random() - 0.5)
-        return possibleWordsCopy
-    }
-    else {
-        for (let word of possibleWords) {
-            possibleWordsLeftForEachResult = [];
-            for (let p of product('AYG', word.length)) {
-                let greens = [];
-                let yellows = [];
-                for (let i = 0; i < word.length; i++) {
-                    if (p[i] === 'G') greens.push(i);
-                    if (p[i] === 'Y') yellows.push(i);
-                }
-
-                let newGuesses = JSON.parse(JSON.stringify(guesses));
-                newGuesses.push({
-                    word: word,
-                    result: {
-                        green: greens,
-                        yellow: yellows
-                    }
-                })
-                possibleWordsAfterCurrentWord = possibleWordsFromGuesses(newGuesses, possibleWords);
-                if (possibleWordsAfterCurrentWord.length > 0) {
-                    possibleWordsLeftForEachResult.push(possibleWordsAfterCurrentWord.length)
-                }
-            }
-            averagePossibleWordsLeft = possibleWordsLeftForEachResult.reduce((a, b) => a + b, 0) / possibleWordsLeftForEachResult.length
-            wordsScores.push([word, averagePossibleWordsLeft])
+const checkWord = (word, possibleWords, wordsScores) => {
+    possibleWordsLeftForEachResult = [];
+    for (let p of product('AYG', word.length)) {
+        let greens = [];
+        let yellows = [];
+        for (let i = 0; i < word.length; i++) {
+            if (p[i] === 'G') greens.push(i);
+            if (p[i] === 'Y') yellows.push(i);
         }
-        // sort wordsScores by first element in each element of array
-        wordsScores.sort((a, b) => {
-            return a[0] - b[0]
+
+        let newGuesses = JSON.parse(JSON.stringify(guesses));
+        newGuesses.push({
+            word: word,
+            result: {
+                green: greens,
+                yellow: yellows
+            }
         })
-        wordsScores.sort((a, b) => {
-            return a[1] - b[1]
-        })
-        return wordsScores.map((el) => el[0]);
+        possibleWordsAfterCurrentWord = possibleWordsFromGuesses(newGuesses, possibleWords);
+        if (possibleWordsAfterCurrentWord.length > 0) {
+            possibleWordsLeftForEachResult.push(possibleWordsAfterCurrentWord.length)
+        }
     }
+    averagePossibleWordsLeft = possibleWordsLeftForEachResult.reduce((a, b) => a + b, 0) / possibleWordsLeftForEachResult.length
+    wordsScores.push([word, averagePossibleWordsLeft])
+}
+
+const countWordsScores =  (guesses, wordList, wordsScores) => {
+    let possibleWords = possibleWordsFromGuesses(guesses, wordList);
+    // if (possibleWords.length > 100) {
+    //     let possibleWordsCopy = JSON.parse(JSON.stringify(possibleWords));
+    //     possibleWordsCopy.sort(() => Math.random() - 0.5)
+    //     possibleWordsCopy.sort((word1, word2) => {
+    //         uniqueLetters1 = new Set(word1);
+    //         uniqueLetters2 = new Set(word2);
+    //         return uniqueLetters2.size - uniqueLetters1.size
+    //     })
+    //     return possibleWordsCopy
+    // }
+    // else {
+        for (let word of possibleWords) {
+            setInterval(checkWord, 0, word, possibleWords, wordsScores) // эта штука асинхронна, поэтому строчки снизу сразу выполняются и массив пустым оказывается
+        }
+    // }
 }
